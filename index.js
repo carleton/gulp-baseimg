@@ -38,6 +38,9 @@ module.exports = function(opts) {
 			buffer.push(dim);
 		} else if(type === 'image/svg+xml') {
 			svgo.optimize(file.contents.toString(), function(res) {
+				var resData = res.data.toString();
+				svgTitle = ( temp = resData.match(/<title>(.*?)<\/title>/i) )? temp[1]: '';
+				svgDesc  = ( temp = resData.match(/<desc>(.*?)<\/desc>/i) )?   temp[1]: '';
 				dim = {
 					width: dim.width,
 					height: dim.height,
@@ -47,7 +50,9 @@ module.exports = function(opts) {
 						sufix
 					].join(''),
 					format: 'svg',
-					name: path.basename(file.path, '.svg')
+					name: path.basename(file.path, '.svg'),
+					title: svgTitle,
+					desc: svgDesc
 				};
 				buffer.push(dim);
 			});
